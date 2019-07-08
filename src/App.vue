@@ -6,8 +6,9 @@
 <script>
     import * as THREE from 'three';
     import {MTLLoader, OBJLoader} from 'three-obj-mtl-loader';
+    import OrbitControls from 'three-orbit-controls';
 
-    const OrbitControls = require('three-orbit-controls')(THREE);
+    //    const OrbitControls = require('three-orbit-controls')(THREE);
 
     export default {
         name: 'App',
@@ -41,7 +42,11 @@
 
             // 初始化光源
             initLight() {
-                this.scene.add(new THREE.AmbientLight('#FFFFFF')); // 环境光
+                this.scene.add(new THREE.AmbientLight('#999999')); // 环境光
+                this.light = new THREE.DirectionalLight('#DFEBFF', 0.45);
+                this.light.position.set(50, 200, 100);
+                this.light.position.multiplyScalar(0.3);
+                this.scene.add(this.light);
             },
 
             // 初始化相机
@@ -52,18 +57,20 @@
 
             // 初始化控制器
             initControls() {
-                this.controls = new OrbitControls(this.camera);
-                this.controls.target.set(0, 15, 0);
+                const orb = OrbitControls(THREE);
+                this.controls = new orb(this.camera);
+                this.controls.target.set(0, 0, 0);
                 this.controls.update();
             },
 
             // 初始化模型
             initObj() {
-                new MTLLoader().setPath('/static/male02/').load('male02.mtl', materials => {
+                new MTLLoader().setPath('/static/').load('Cerberus.mtl', materials => {
                     materials.preload();
-                    new OBJLoader().setMaterials(materials).setPath('/static/male02/').load('male02.obj', obj => {
-                        obj.scale.set(0.3, 0.3, 0.3);
+                    new OBJLoader().setMaterials(materials).setPath('/static/').load('Cerberus.obj', obj => {
+                        obj.scale.set(50, 50, 50);
                         obj.position.set(0, 0, 0);
+                        console.log(obj.boundingBox);
                         this.scene.add(obj)
                     })
                 });
@@ -88,5 +95,6 @@
         width: 500px;
         height: 500px;
         border: 1px solid black;
+        background: black;
     }
 </style>
