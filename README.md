@@ -2,7 +2,9 @@
 
 > Three.js learn project. Load model and add label.
 
-##
+## Preview
+
+![image](https://raw.githubusercontent.com/geminate/three-js-learn/master/blob/5.gif)
 
 ## Build Setup
 
