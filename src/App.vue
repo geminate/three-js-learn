@@ -1,5 +1,12 @@
 <template>
-    <div ref="container" class="container">
+    <div>
+        <div ref="container" class="container"></div>
+
+        <div class="label-container">
+            <span class="label" ref="muzzle">枪口：{{value.muzzle}}℃</span>
+            <span class="label" ref="priming">枪机：{{value.priming}}℃</span>
+            <span class="label" ref="grip">握柄：{{value.grip}}℃</span>
+        </div>
     </div>
 </template>
 
@@ -13,6 +20,11 @@
         name: 'App',
         data() {
             return {
+                value: {
+                    muzzle: (Math.random(20, 80) * 100).toFixed(0),
+                    priming: (Math.random(20, 80) * 100).toFixed(0),
+                    grip: (Math.random(20, 80) * 100).toFixed(0)
+                },
                 container: null,
                 scene: '',
                 light: '',
@@ -75,6 +87,8 @@
                 const orb = OrbitControls(THREE);
                 this.controls = new orb(this.camera);
                 this.controls.target.set(0, 0, 0);
+                this.controls.autoRotate = true;
+                this.controls.autoRotateSpeed = 6;
                 this.controls.update();
             },
 
@@ -84,7 +98,7 @@
                     materials.preload();
                     new OBJLoader().setMaterials(materials).setPath('/static/').load('Cerberus.obj', obj => {
                         obj.scale.set(50, 50, 50);
-                        obj.position.set(50, 0, 0);
+                        obj.position.set(0, 0, 0);
                         this.addLabel(obj);
                         this.scene.add(obj);
                     })
@@ -93,12 +107,17 @@
 
             // 初始化标签
             addLabel(mesh) {
-                let label = document.createElement('div');
-                label.textContent = '一把枪';
-                label.style.fontSize = '15px';
-                this.biaozhuLabel = new CSS2DObject(label);
-                this.biaozhuLabel.position.set(0, 0.18, -0.2);
-                mesh.add(this.biaozhuLabel);
+                let muzzleLabel = new CSS2DObject(this.$refs.muzzle);
+                muzzleLabel.position.set(0, 0.18, -1.2);
+                mesh.add(muzzleLabel);
+
+                let primingLabel = new CSS2DObject(this.$refs.priming);
+                primingLabel.position.set(0, 0.18, 0.2);
+                mesh.add(primingLabel);
+
+                let gripLabel = new CSS2DObject(this.$refs.grip);
+                gripLabel.position.set(0, -0.4, 0.5);
+                mesh.add(gripLabel);
             },
 
             // 渲染
@@ -108,10 +127,25 @@
                 this.renderer.render(this.scene, this.camera);
                 this.labelRenderer.render(this.scene, this.camera);
             },
+
+            initValueTimer() {
+                setInterval(() => {
+                    this.value.muzzle = (Math.random(20, 80) * 100).toFixed(0);
+                }, 2000);
+
+                setInterval(() => {
+                    this.value.priming = (Math.random(20, 80) * 100).toFixed(0);
+                }, 1000);
+
+                setInterval(() => {
+                    this.value.grip = (Math.random(20, 80) * 100).toFixed(0);
+                }, 3000)
+            }
         },
         mounted() {
             this.init();
             this.animate();
+            this.initValueTimer();
         }
     }
 </script>
@@ -121,5 +155,13 @@
         width: 500px;
         height: 500px;
         border: 1px solid black;
+    }
+
+    .label-container {
+        display: none;
+    }
+
+    .label {
+        font-size: 12px;
     }
 </style>
