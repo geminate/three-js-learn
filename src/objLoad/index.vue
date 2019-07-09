@@ -79,14 +79,14 @@
 
             // 初始化相机
             initCamera() {
-                this.camera = new THREE.PerspectiveCamera(60, this.container.clientWidth / this.container.clientHeight, 10, 1000);
+                this.camera = new THREE.PerspectiveCamera(60, this.container.clientWidth / this.container.clientHeight, 1, 1000);
                 this.camera.position.set(0, 20, 100);
             },
 
             // 初始化控制器
             initControls() {
                 const orb = OrbitControls(THREE);
-                this.controls = new orb(this.camera);
+                this.controls = new orb(this.camera, this.container);
                 this.controls.target.set(0, 0, 0);
                 this.controls.autoRotate = true;
                 this.controls.autoRotateSpeed = 6;
@@ -95,9 +95,9 @@
 
             // 初始化模型
             initObj() {
-                new MTLLoader().setPath('/static/').load('Cerberus.mtl', materials => {
+                new MTLLoader().setPath('/static/obj/').load('Cerberus.mtl', materials => {
                     materials.preload();
-                    new OBJLoader().setMaterials(materials).setPath('/static/').load('Cerberus.obj', obj => {
+                    new OBJLoader().setMaterials(materials).setPath('/static/obj/').load('Cerberus.obj', obj => {
                         obj.scale.set(50, 50, 50);
                         obj.position.set(0, 0, 0);
                         this.addLabel(obj);
@@ -151,7 +151,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .container {
         width: 500px;
         height: 500px;

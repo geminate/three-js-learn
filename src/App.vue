@@ -1,18 +1,26 @@
 <template>
-    <div>
-        <obj-loader></obj-loader>
+    <div class="container">
+        <obj-load class="item"></obj-load>
+        <gltf-load class="item"></gltf-load>
     </div>
 </template>
 
 <script>
-    import objLoader from './objLoad';
+    import objLoad from './objLoad';
+    import gltfLoad from './gltfLoad';
 
     export default {
         name: 'App',
-        components: {objLoader}
+        components: {objLoad, gltfLoad}
     }
 </script>
 
-<style>
+<style scoped>
+    .container {
+        display: flex;
+    }
 
+    .item {
+        margin: 5px;
+    }
 </style>
