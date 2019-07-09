@@ -19,7 +19,9 @@
                 light: '',
                 camera: '',
                 controls: '',
-                renderer: ''
+                renderer: '',
+                mixer: '',
+                clock: new THREE.Clock()
             }
         },
         methods: {
@@ -65,8 +67,8 @@
                 const orb = OrbitControls(THREE);
                 this.controls = new orb(this.camera, this.container);
                 this.controls.target.set(0, 0, 0);
-//                this.controls.autoRotate = true;
-//                this.controls.autoRotateSpeed = -6;
+                this.controls.autoRotate = true;
+                this.controls.autoRotateSpeed = -6;
                 this.controls.update();
             },
 
@@ -75,6 +77,9 @@
                 let loader = new GLTFLoader();
                 loader.load('static/gltf/scene.gltf', (gltf) => {
                     this.scene.add(gltf.scene);
+                    this.mixer = new THREE.AnimationMixer(gltf.scene);
+                    this.mixer.clipAction(gltf.animations[0]).play();
+                    console.log(this.clock.getDelta())
                 });
             },
 
@@ -82,6 +87,7 @@
             animate() {
                 requestAnimationFrame(this.animate);
                 this.controls.update();
+                this.mixer && this.mixer.update(this.clock.getDelta());
                 this.renderer.render(this.scene, this.camera);
             },
         },
